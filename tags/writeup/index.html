@@ -78,6 +78,8 @@
     <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
     
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -201,10 +203,8 @@
 </head>
 
     
-        <body class="home-body">
     
-    
-<header class="header index-header">
+<header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -220,34 +220,21 @@
 
 
 
-
-height:50vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 文章页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            thr0cyte's blog.
-            <!-- 文章页  -->
-            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
-            
-            
-                keep coding......
-            
-            <!-- 文章页  -->
             
         </p>
         <!-- 文章页meta -->
@@ -359,39 +346,6 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/04/27/ddos攻击及检测/" >
-            
-                <span>ddos攻击及检测</span>
-        </a>
-        <div class="abstract-content">
-            这两天玩了下传说中的拒绝服务，发现确实流氓：
-前言DDOS，全名为Distributed Denial of Service，意为分布式拒绝服务攻击，即利用各种资源和技术联合起来耗尽目标服务器带宽，使其无法处理正常请求来服务正常用户，从而实现敲诈勒索、报复、获取竞争优势的目的。举一个例子可以很好的理解DDOS：街边开了一家奶茶店生意非常火爆，对门自己家的奶茶店无人问津，于是自己雇一些人早上一大早就去对门的奶茶店点一个奶茶，坐到晚上关门，使它无法服务真正的顾客，从而达到“抢生意”的目的。
-实验环境：kali(192.168.1.106)、win2003(192.168.1.105)、win...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/27</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ddos">ddos</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "抓包">抓包</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
         <a class="abstract-title" href = "/2018/04/04/iscc2018最后一道misc-writeup/" >
             
                 <span>iscc2018最后一道misc writeup</span>
@@ -429,99 +383,6 @@ Flag.txt直接打开了，发现里面有个字符串：“vfppjrnerpbzva”
     
 </main>
             <!-- profile -->
-            
-            <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/Misaka.jpg >
-    <div class="profile-name">thr0cyte</div>
-    
-    <div class="profile-signature">
-        计算机技术爱好者
-    </div>
-    
-    
-    <div class="profile-social">
-        
-    
-        
-            
-                <a href="mailto:xpf1996cc@126.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/thr0cyte" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-    
-        
-            
-                <span class="iconfont-archer qq" title=qq>
-                  
-                  <img class="profile-qr" src="/assets/qq.png" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="//steamcommunity.com/profiles/76561198419876010/" class="iconfont-archer steam" target="_blank" title=steam></a>
-            
-        
-    
-        
-    
-        
-    
-
-    </div>
-    
-    
-        <div class="friends">
-            <div>FRIENDS</div>
-            
-                
-                    <span>
-                        <a href= //r1ght0us.xyz target="_black">大博</a>
-                    </span>
-                
-            
-                
-            
-                
-            
-        </div>
-    
-    
-</div>
             
         </div>
         <footer class="footer footer-unloaded">
