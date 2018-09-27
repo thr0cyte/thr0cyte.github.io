@@ -346,27 +346,26 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/04/27/ddos攻击及检测/" >
+        <a class="abstract-title" href = "/2018/09/20/画了个信息收集的脑图/" >
             
-                <span>ddos攻击及检测</span>
+                <span>画了个信息收集的脑图</span>
         </a>
         <div class="abstract-content">
-            这两天玩了下传说中的拒绝服务，发现确实流氓：
-前言DDOS，全名为Distributed Denial of Service，意为分布式拒绝服务攻击，即利用各种资源和技术联合起来耗尽目标服务器带宽，使其无法处理正常请求来服务正常用户，从而实现敲诈勒索、报复、获取竞争优势的目的。举一个例子可以很好的理解DDOS：街边开了一家奶茶店生意非常火爆，对门自己家的奶茶店无人问津，于是自己雇一些人早上一大早就去对门的奶茶店点一个奶茶，坐到晚上关门，使它无法服务真正的顾客，从而达到“抢生意”的目的。
-实验环境：kali(192.168.1.106)、win2003(192.168.1.105)、win...
+            欢迎补充
+
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/27</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/20</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ddos">ddos</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "信息收集">信息收集</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "抓包">抓包</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "脑图">脑图</a>
     
 </div>
             
@@ -379,33 +378,328 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/04/04/iscc2018最后一道misc-writeup/" >
+        <a class="abstract-title" href = "/2018/08/27/安恒杯八月赛应急响应流量包分析writeup/" >
             
-                <span>iscc2018最后一道misc writeup</span>
+                <span>安恒杯八月赛应急响应流量包分析writeup</span>
         </a>
         <div class="abstract-content">
-            下载附件发现是个zip，里面还有个flag.txt，打开需要密码，看完题目，猜测是zip伪加密。
-Zip文件由压缩源文件数据区、压缩源文件目录区、压缩源文件目录结束标志构成数据区：目录区：结束标志区：把zip丢进winhex：数据区的全局方式位标记和目录区的全局方式位标记都遭到修改，把它修改回00 00：保存。
-Flag.txt直接打开了，发现里面有个字符串：“vfppjrnerpbzva”
-猜测是凯撒密码加密，到网站上解密一下：十三次偏移以后出现可疑字符，提交发现是正确flag~
-
+            这次安恒出的题太棒了，完全模拟真实环境，点个赞！
+流量分析1某公司内网网络被黑客渗透，请分析流量，给出黑客使用的扫描器:
+在某一个包里发现了wvs字样，猜测是awvs，过滤一下webone.pcap
+过滤语句：http contains”wvs”确定了就是awvs
+流量分析2某公司内网网络被黑客渗透，请分析流量，得到黑客扫描到的登陆后台是(相对路径即可):
+过滤语句：http.request.uri contains”login”
+其中一条：所以相对路径：/admin/login.php?rec=login
+流量分析3某公司内网网络被黑客渗透，请分析流量，得到黑客使用了什么账号密码登陆了...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/04</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/27</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "misc">misc</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ctf">ctf</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "安恒杯">安恒杯</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "应急响应">应急响应</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/08/01/security-考后心得/" >
+            
+                <span>security+考后心得</span>
+        </a>
+        <div class="abstract-content">
+              经过一个月的艰苦奋斗，终于将security+拿到手，这门考试说是注重技术实践，其实涉及面颇广，都是点到为止，而且并没有具体渗透实操的内容，但是对于了解安全整个行业的涉及面起到很大的作用。经过这次复习备考，我在巩固了渗透基础知识的同时，还掌握了企业中的安全产品实践、企业安全建设管理和密码学的知识，也算是“不虚此行”。下面将这次考试接触到的知识点总结在下，方便以后查阅和运用。  信息安全三大特性：confidentiality机密性、Integrity完整性、Availability实效性
+虚拟机局域网VLAN：为了实现安全性，分割广播域和创建子网。通常运用在不同部门的网络划分。工作在...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "security+">security+</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/07/24/安恒杯7月赛writeup/" >
+            
+                <span>安恒杯7月赛writeup</span>
+        </a>
+        <div class="abstract-content">
+            这次月赛被虐的头疼，编程不熟真的是硬伤，等考完security+好好的练习python，拒绝工具！
+第一道web提示是order注入，测试了一下，发现是返回不同页面的盲注，直接丢sqlmap：
+C:\Users\Administrator&gt;sqlmap.py -u “http://101.71.29.5:10000/?order=name&amp;button=submit” -p order –thread 5
+GET parameter ‘order’ is vulnerable. Do you want to keep testing the others (ifany)? ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/24</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "ctf">ctf</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "iscc">iscc</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "安恒杯">安恒杯</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/07/02/如何黑掉同局域网的手机/" >
+            
+                <span>如何黑掉同局域网的手机</span>
+        </a>
+        <div class="abstract-content">
+              昨天在B站上看到一个黑手机的视频，突然想起来去年暑假尝试过一次没有成功，刚好刚学完msf框架，今天就来试一下。
+搭好环境后，手机连入网络，开始实验！
+首先进行内网主机发现：手机ip是172.20.10.3
+下面进行arp欺骗，让手机去网关的流量经过kali主机配置dns投毒攻击：
+gedit /etc/ettercap/etter.dns开始在kali伪造木马下载页面：12345678910111213141516171819202122232425&lt;html&gt;&lt;head&gt;&lt;title&gt;网络异常&lt;/title&gt;&lt;meta char...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "中间人">中间人</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "dns投毒">dns投毒</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "arp欺骗">arp欺骗</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "反弹shell">反弹shell</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "安卓">安卓</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/06/26/安恒杯6月赛web题writeup/" >
+            
+                <span>安恒杯6月赛web题writeup</span>
+        </a>
+        <div class="abstract-content">
+            第一道三个链接都点不了，但是移上去左下角都有链接显示，所有右键新窗口打开：
+怀疑mysql和mssql选项有sql注入，注入半天，没什么卵用。。
+百度MongoDB注入
+参考文章： https://www.secpulse.com/archives/3278.html
+利用php可以传递数组参数的特性，得到flag：
+第二道文件上传漏洞;
+传了个php，修改类型绕过了MIME检测，修改了后缀名，还是会上传失败，怀疑会检测内容
+直接上传图片，抓包修改图片内容，上传成功：连菜刀，拿到flag
+第三题注册账号，登陆后，发现Note那里有存储xss漏洞，想了想管理员也应该不会来看我的note呀，...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ctf">ctf</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "安恒杯">安恒杯</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/06/20/记被通信网络设计整惨的两天/" >
+            
+                <span>记被通信网络设计整惨的两天</span>
+        </a>
+        <div class="abstract-content">
+              这两天，学校突然下发了个通信网络课程设计课题，以前完全不知道还有这个课程设计啊！我们寝室抽到了NAT网络地址转换的实验，emmmm还算简单，花了一个小时看了下nat，原来是内网地址转换外网地址，连接外网的服务器设有地址池，固定外网ip，防止外网ip地址泛滥的东西。看的教程是华为3的，老师要求的是思科，坑啊！就学了下思科里路由器的转发配置，设备ip配置一些基础操作。下面是网络拓扑图：  然后设置内网三台设备的ip，给路由器设路由转发，外网服务器搞http服务，最后ping呀ping的，看路由表然后就成功了。验收的时候口胡老师，老师一脸懵逼，就给过了……美滋滋的回寝室，准备撸两把休息一下...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "网络">网络</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "acl">acl</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "nat">nat</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ospf">ospf</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/06/09/社工库检索器-py/" >
+            
+                <span>社工库检索器.py</span>
+        </a>
+        <div class="abstract-content">
+                网上找到一些以前被脱下来的数据库，想自己搭一个社工库的看了看真的麻烦，还得处理数据，就写了这个简易检索器，满足日常需求就行
+import codecs
+from optparse import OptionParser
+
+optParser=OptionParser()
+optParser.add_option(&quot;-m&quot;, &quot;--mess&quot;, action=&quot;store&quot;, type=&quot;string&quot;,
+                     dest=&quot;message&quot;, he...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/09</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "社工库">社工库</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/06/04/铁人三项企业攻防赛writeup/" >
+            
+                <span>铁人三项企业攻防赛writeup</span>
+        </a>
+        <div class="abstract-content">
+              朋友参加的企业攻防赛，要来靶机打着玩玩
+三个靶机，设置好。线索只有一个ip：192.168.50.128，是个web应用，打开他，发现是织梦cms框架，尝试进入一下该框架的后台管理目录/dede，200响应~尝试登陆账1密1尝试账admin密1由此推出存在admin账号，尝试一下post注入：失败了那就试下爆破弱密码：成功得到密码！登陆进后台一个flag到手！找下上传功能传个马上去：
+修改content-type后，总说成功上传0个文件，后来找到解决办法：在这里添加php后缀名，然后直接上传成功！用菜刀连接：进来了！看能否使用虚拟终端：可以，还拿到了第二个flag
+网站目录全部到手！...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/04</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ctf">ctf</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "铁人三项">铁人三项</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/05/30/盗取wpa2密码的一个骚思路/" >
+            
+                <span>盗取wpa2密码的一个骚思路</span>
+        </a>
+        <div class="abstract-content">
+            这个思路是受到吾爱破解一个老哥的启发，他的bat脚本需要下载解压文件比较麻烦，我给精简了一下还加了”自我毁灭”功能。来无影，去无踪（滑稽）
+攻击脚本首先需要大量廉价u盘，或者sd卡，或者badusb，拷入该bat脚本，扔在目标区域开始钓鱼。脚本：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "wifi">wifi</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "wpa2">wpa2</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "无线渗透">无线渗透</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "社工">社工</a>
     
 </div>
             
@@ -413,6 +707,10 @@ Flag.txt直接打开了，发现里面有个字符串：“vfppjrnerpbzva”
     </article>
     
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/archives/2018/page/2/">2</a><a class="extend next" rel="next" href="/archives/2018/page/2/">NEXT &#62;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -531,9 +829,117 @@ Flag.txt直接打开了，发现里面有个字符串：“vfppjrnerpbzva”
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 2
+        Total : 12
         </div>
         <!-- search  -->
         
@@ -546,6 +952,56 @@ Flag.txt直接打开了，发现里面有个字符串：“vfppjrnerpbzva”
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/20</span><a class="archive-post-title" href= "/2018/09/20/画了个信息收集的脑图/" >画了个信息收集的脑图</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/安恒杯八月赛应急响应流量包分析writeup/" >安恒杯八月赛应急响应流量包分析writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2018/08/01/security-考后心得/" >security+考后心得</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2018/07/24/安恒杯7月赛writeup/" >安恒杯7月赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href= "/2018/07/02/如何黑掉同局域网的手机/" >如何黑掉同局域网的手机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2018/06/26/安恒杯6月赛web题writeup/" >安恒杯6月赛web题writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2018/06/20/记被通信网络设计整惨的两天/" >记被通信网络设计整惨的两天</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/09</span><a class="archive-post-title" href= "/2018/06/09/社工库检索器-py/" >社工库检索器.py</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span><a class="archive-post-title" href= "/2018/06/04/铁人三项企业攻防赛writeup/" >铁人三项企业攻防赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/盗取wpa2密码的一个骚思路/" >盗取wpa2密码的一个骚思路</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -573,6 +1029,48 @@ Flag.txt直接打开了，发现里面有个字符串：“vfppjrnerpbzva”
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
         <span class="sidebar-tag-name" data-tags="iscc"><span class="iconfont-archer">&#xe606;</span>iscc</span>
+    
+        <span class="sidebar-tag-name" data-tags="security+"><span class="iconfont-archer">&#xe606;</span>security+</span>
+    
+        <span class="sidebar-tag-name" data-tags="安恒杯"><span class="iconfont-archer">&#xe606;</span>安恒杯</span>
+    
+        <span class="sidebar-tag-name" data-tags="中间人"><span class="iconfont-archer">&#xe606;</span>中间人</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns投毒"><span class="iconfont-archer">&#xe606;</span>dns投毒</span>
+    
+        <span class="sidebar-tag-name" data-tags="arp欺骗"><span class="iconfont-archer">&#xe606;</span>arp欺骗</span>
+    
+        <span class="sidebar-tag-name" data-tags="反弹shell"><span class="iconfont-archer">&#xe606;</span>反弹shell</span>
+    
+        <span class="sidebar-tag-name" data-tags="安卓"><span class="iconfont-archer">&#xe606;</span>安卓</span>
+    
+        <span class="sidebar-tag-name" data-tags="应急响应"><span class="iconfont-archer">&#xe606;</span>应急响应</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息收集"><span class="iconfont-archer">&#xe606;</span>信息收集</span>
+    
+        <span class="sidebar-tag-name" data-tags="脑图"><span class="iconfont-archer">&#xe606;</span>脑图</span>
+    
+        <span class="sidebar-tag-name" data-tags="wifi"><span class="iconfont-archer">&#xe606;</span>wifi</span>
+    
+        <span class="sidebar-tag-name" data-tags="wpa2"><span class="iconfont-archer">&#xe606;</span>wpa2</span>
+    
+        <span class="sidebar-tag-name" data-tags="无线渗透"><span class="iconfont-archer">&#xe606;</span>无线渗透</span>
+    
+        <span class="sidebar-tag-name" data-tags="社工"><span class="iconfont-archer">&#xe606;</span>社工</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="社工库"><span class="iconfont-archer">&#xe606;</span>社工库</span>
+    
+        <span class="sidebar-tag-name" data-tags="网络"><span class="iconfont-archer">&#xe606;</span>网络</span>
+    
+        <span class="sidebar-tag-name" data-tags="acl"><span class="iconfont-archer">&#xe606;</span>acl</span>
+    
+        <span class="sidebar-tag-name" data-tags="nat"><span class="iconfont-archer">&#xe606;</span>nat</span>
+    
+        <span class="sidebar-tag-name" data-tags="ospf"><span class="iconfont-archer">&#xe606;</span>ospf</span>
+    
+        <span class="sidebar-tag-name" data-tags="铁人三项"><span class="iconfont-archer">&#xe606;</span>铁人三项</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog,hacker,pentesting">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>security+考后心得 · thr0cyte&#39;s bolg</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon2.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >thr0cyte&#39;s blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">security+考后心得</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>thr0cyte's blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            security+考后心得
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "security+">security+</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.8k</span>阅读时长: <span class="post-count reading-time">13 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/08/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>  <strong>经过一个月的艰苦奋斗，终于将security+拿到手，这门考试说是注重技术实践，其实涉及面颇广，都是点到为止，而且并没有具体渗透实操的内容，但是对于了解安全整个行业的涉及面起到很大的作用。经过这次复习备考，我在巩固了渗透基础知识的同时，还掌握了企业中的安全产品实践、企业安全建设管理和密码学的知识，也算是“不虚此行”。下面将这次考试接触到的知识点总结在下，方便以后查阅和运用。</strong><br> <br><br> 信息安全三大特性：confidentiality机密性、Integrity完整性、Availability实效性</p>
+<p>虚拟机局域网VLAN：为了实现安全性，分割广播域和创建子网。通常运用在不同部门的网络划分。工作在数据链路层。</p>
+<p>路由器：工作在网络层，连接因特网中各局域网、广域网的设备，可以根据acl过滤流量，分割数据包。可以识别网络层的逻辑地址信息，从而构建路由表，决策有效路径</p>
+<p>传输介质：同轴电缆、双绞线（8根，4根备份，2根接收，2根发送）、光缆</p>
+<p>端口号：<br><img src="/images/ss1.png" alt=""></p>
+<p>死亡之ping攻击：使用非法超大号的ICMP数据包</p>
+<p>smurf攻击：发送一个icmp回应请求，源地址伪造成受害者的ip，目标地址为可ping通受害者的机器的ip，从而导致收到很多机器的icmp请求包，造成dos攻击。</p>
+<p>arp偷毒：改变受害者系统的arp缓存表，欺骗它的流量经过攻击者主机再流向网关，从而进一步进行中间人攻击</p>
+<p>dns协议，解析域名，TCP协议；SNMP协议，简单网络管理协议，对通信线路进行管理；SMTP协议，发邮件（配置邮箱服务器需关闭邮件转发）；POP和IMAP协议，收邮件；</p>
+<p>ssh，sftp，scp都基于ssl</p>
+<p>scp协议，安全文件拷贝协议，基于ssh协议，端口号22</p>
+<p>VPN，虚拟专有线路，给两个在公网的机器建立传输加密通道。所需协议：四层：ssl；三层：IPsec；二层：PPTP,L2TP,MPLS</p>
+<p>DMZ，非军事化区，用来隔离内网外网，放置各种用户访问的服务器，如web服务器，邮箱服务器</p>
+<p>防火墙：一个信息安全的防护系统，允许或限制传输的数据通过。主要用于边界安全防护的权限控制和安全域的划分。现在最强的是状态防火墙，工作在网络、传输、应用层</p>
+<p>UTM：同意威胁管理，集成了状态检测防火墙、VPN、网关防病毒、IPS、绿色上网、反垃圾邮件等安全防护功能，可以阻挡未授权的访问，网络入侵，病毒，蠕虫，木马，间谍软件，钓鱼诈骗，垃圾邮件等安全威胁。</p>
+<p>URL Filters过滤网关，又称内容过滤器，控制公司职员访问网络资源，防止威胁</p>
+<p>waf：web层的防火墙，狗、云、盾等，防护对web应用的攻击</p>
+<p>IDS，入侵检测系统（被动）；IPS入侵防护系统（主动）</p>
+<p>蜜罐：吸引攻击者攻击，有利于安全人员分析攻击手段和诱捕攻击者</p>
+<p>WEP，使用RC4加密，容易被破解</p>
+<p>WPA，tkip模式，支持eap，容易被破解</p>
+<p>WPA2，CCMP或CCM模式，AES加密，目前最安全的无线加密</p>
+<p>802.1X：内网接入身份验证协议</p>
+<p>胖ap：家用小型wifi；瘦ap：企业、校园用等大型wifi，可进行认证登陆</p>
+<p>战争驾驶：wifi侦察；战争标记：标记弱安全的wifi；双面恶魔：建立假ap，转发请求；蓝牙劫持：用于发送广告；蓝牙攻击：用于窃取手机机密信息</p>
+<p>PII，个人可识别信息，手机号、生日、家庭住址等信息</p>
+<p>信息安全管理要求：欧盟：GDPR   美国：HIPA   中国：ISO27001</p>
+<p>用户密码策略：最小长度、密码历史、最长时间、最短时间、密码复杂度（大小写字母+数字+特殊符号）等</p>
+<p>MOU：谅解备忘录，双方经过协商、谈判达成共识后，用文本的方式记录下来，简称协议</p>
+<p>SLA，服务水平协议，由服务供应商与用户签署的法律文件，承诺提供的服务支持</p>
+<p>人力资源相关策略：职责分离：不应有人从头到尾完全控制一项敏感任务；最小特权；工作轮换：不允许某人过长时间担任某个职务；强制休假</p>
+<p>安全意识培训：密码习惯、数据处理、清理桌面、尾随防范、个人设备、使用社交网络</p>
+<p>ALE，年度损失期望，等于单次损失金额×年化损失概率</p>
+<p>风险处置策略：降低风险、规避风险、转移风险（保险）、接受风险、威慑风险</p>
+<p>物理安全控制：锁、CCTV监控、保安、双重门、栅栏立柱、报警器、门禁等</p>
+<p>环境控制：温度太高，服务器会重启或宕机；温度太低，机器结霜；湿度太高，机器会锈；湿度太低，容易静电。</p>
+<p>业务连续性计划：BIA（核心内容），业务影响分析； MTD，最高可承受的停机时间； RPO，恢复多久前的数据； RTO，还原时间目标</p>
+<p>备用站点：热站：无实时数据，出事送硬盘就可以；温站：几天才能恢复，基础设备，没服务器；冷站：什么都没有的一个空间； 移动数据中心，很昂贵</p>
+<p>两地三中心：两地是指同城、异地，三中心是指生产中心、同城容灾中心、异地容灾中心。</p>
+<p>接班人计划：确保关键业务人员有接班人</p>
+<p>负载均衡：大家的活一起干，分摊压力。集群：自己的活忙不过来给他人分担，实现高可用性</p>
+<p>灾难恢复流程：确认真实性和影响面，通知领导，启用灾难恢复，遏止事态发展，恢复，报告，总结</p>
+<p>备份：完全备份：备份所有文件； 差异备份：备份上次完全备份后改变的文档； 增量备份：备份上次完全备份和差异备份后改变的文档</p>
+<p>易失性顺序：CPU缓存、RAM、硬盘内存、硬盘驱动</p>
+<p>DLP，数据丢失防护，检测并防止数据被发送到未经授权的机关</p>
+<p>社会工程学类型：欺骗、扮演、恐吓、钓鱼（鱼叉、吊鲸）、肩窥、垃圾搜寻、尾随、垃圾邮件</p>
+<p>攻击手段：DDOS，软件攻击（缓冲区溢出），web攻击（xss、sql注入、csrf、命令注入、目录包含等）</p>
+<p>恶意软件：广告软件、间谍软件、逻辑炸弹、木马、蠕虫、rookits、后门、勒索病毒等</p>
+<p>TPM，可信平台模块，计算机加密芯片，存储加密密钥</p>
+<p>可接受使用策略：进公司签订，对数据进行保护</p>
+<p>Fuzzing，模糊测试，是一种通过向目标系统提供非预期的输入并监视异常结果来发现软件漏洞的方法</p>
+<p>移动设备安全控制：设备管理、设备加密、远程擦除、锁定、屏幕锁、GPS定位、应用控制</p>
+<p>多因素身份认证：sth you have  ;  sth you know  ;  sth you are   ;sth you do</p>
+<p>HOTP，一次性密码，u盾之类的东西。  TOTP，时钟同步令牌</p>
+<p>假阳性：误报 ； 假阴性：漏报</p>
+<p>单点登陆SSO,输入一次凭证，能够访问主次网络域中的所有资源</p>
+<p>认证协议：</p>
+<p>PAP 是点对点认证协议，明文传输<br>CHAP 是点对点认证协议，其周期性的通过3 次握手协议验证客户端身份</p>
+<p>Kerberos 是C/S 模式协议，同时使用TCP/UDP 协议，提供了服务器端与客户端的相互认证，依靠’tickets’允许节点在不安全网络上验证身份并工作。其默认使用端口88。Kerberos 密钥分发中心（KDC）通过来使用安全的加密密钥和tickets 来确认身份和授权接入网络。Kerberos 被微软选为Windows 2000 和随后Active Directory domains的默认认证协议。</p>
+<p>RADIUS 用于远程接入网络，运行在应用层，使用UDP 协议。大多数控制访问网络的网关都有与RADIUS 服务器进行通信的RADIUS 客户机组件。RADIUS server 是保存用户账户和密码认证数据库。RADIUS 使用共享密钥（对称密钥）和经过MD5 HASH 的传输密钥。目前主要使用PAP/CAHP 加密认证。可以提供使用网络服务的用户提供远程集中身份验证、授权和计费管理。</p>
+<p>Diameter 系替代RADIUS 的AAA 协议，使用TCP 协议，通过tcp 或sctp 提供可靠的传输，通过ipsec 和tls 来保证传输的安全性。其为各种应用协议（包括扩展认证应用协议EAP）提供了一个基本框架，它定义了协议的传输机制、消息格式、消息处理、差错处理、计费与安全服务等。</p>
+<p>TACACS+默认使用TCP 端口49，并且不兼容TACACS 和XTACACS。允许客户端接受用户名和密码，并发送一个查询给TACACS 认证服务器。由认证服务器决定是否接受或拒绝身份验证请求并发送响应，客户端依据此接受或拒绝验证请求。</p>
+<p>LDAP，轻量级目录访问协议，是X.500 标准的一个简单子集，也被称为X.500-Lite，使用TCP 协议，用于无线客户端和RADIUS server 之间，特性包括动态WEP 密钥（或TKIP）和相互认证。LDAP 服务器称为目录系统代理（DSA），默认端口为TCP 和UDP 端口389，LDAPS（SSL）默认为端口636，全球目录端口默认为3268，LDAPS 为3269。LDAP可以用SSL/TLS 进行加密，即LDAPS。<br>XML 系可扩展标记语言，是一种用于标记电子文件使其具有结构性的标记语言。</p>
+<p>SAML 系安全断言标记语言，基于XML 的一个开放标准的框架协议，用于在不同的安全域(security domain)之间交换认证和授权数据。</p>
+<p>访问控制模型：自主访问控制、强制访问控制、基于角色的访问控制</p>
+<p>加密算法：</p>
+<p>Blowfish，系64bits 分组及可变密钥长度（from 32 bits to 448 bits）的对称密钥分组密码算法，密钥最小，速度最快（超越DES）。</p>
+<p>Twofish，替换DES 算法的高级加密标准（AES）算法的候选算法, 使用分组加密机制, 128bits 数据分组，128/192/256 bits 可变长度密钥。</p>
+<p>ECC，椭圆加密算法，密钥长度较短且不定，随加密强度的提高，密钥长度变化不大。ECC 160bits 密钥加密强度和RSA 1024bits 密钥加密强度相近。</p>
+<p>ECDHE：Elliptic curve Diffie–Hellman,匿名密钥协商协议，允许双方各有一个椭圆曲线公钥-私钥对，以在不安全的信道上建立一个共享的秘密。同时提供了CRC 完整性检查和RCA 加密。</p>
+<p>Diffie–Hellman，密钥交换协议，只能用于密钥的交换，而不能进行消息的加密和解密。</p>
+<p>DES，系64bits 分组及56bits 密钥的对称密钥加密算法；虽然已被3DES 和AES 取代，但是目前依然在使用中。<br>3DES，系64bits 分组及168bits 密钥的对称密钥加密算法;其没有ECC 安全,但是计算速度更快。</p>
+<p>AES，高级加密标准，也称Rijndael 加密算法（区别如下），用来替代DES，AES 分组长度为128bits，密钥长度可以是128，192 或256bits。比RC4 加密强度更高，加密速度更快。已成为对称密钥加密中最流行的算法之一。</p>
+<p>RSA：公钥加密算法，能同时用于加密和数字签名。RSA 密钥一般推荐使用1024bits，递增为1024 的整数倍。</p>
+<p>RC4：流加密算法，密钥大小范围为40 至2048bits，默认为256 字节，算法速度可达到DES 加密的10 倍左右。常用于WEP/WPA 加密。</p>
+<p>HTTPS：安全套接字层超文本传输协议，即在HTTP 下加入SSL/TLS 层以强化安全。</p>
+<p>S/MIME 是用于电子邮件和其他电子消息通信的应用程序。其为电子消息应用程序提供以下加密安全服务：身份验证、消息完整性、不可抵赖性（使用数字签名）、隐私和数据安全（使用加密）。</p>
+<p>PGP(Pretty Good Privacy)，是一个基于RSA 公钥加密体系的邮件加密软件。提供保密性和完整性</p>
+<p>MD2/4/5：HASH 函数，创建128bits 的HASH 值。</p>
+<p>SHA:安全HASH 算法，不同的版本产生不同长度的消息摘要，SHA-1 产生160bits 的HASH 值，SHA-1，SHA-224 和SHA-256 适用于长度不超过2^64 二进制位的消息。SHA-384 和SHA-512 适用于长度不超过2^128 二进制位的消息。</p>
+<p>HMAC，密钥相关的哈希运算消息认证码，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。使用哈希散列算法与对称密钥，HASH 提供数据完整性、对称密钥提供真实性。可以用于身份认证，常被用于IPSec 协议（其他包括：BlowFish/TwoFish）。</p>
+<p>PKI 是一套硬件、软件、人员、政策和程序,用于创建、管理、分发、使用、存储和撤消数字证书，使用双向信任模型与CAs 建立信任关系。</p>
+<p>CSR，证书签名请求文件，创建CSR 时，需要先生成自己的密钥对(公钥和私钥)，保存基于RSA 的私钥，并把公钥及部分个人身份信息传送给CA，CA 验证后将发给用户一个数字证书，该证书内包含用户的个人信息和他的公钥信息，同时还附有认证中心的签名信息。删除CSR 即删除了自己的私钥，在未获取证书前不得删除CSR。</p>
+<p>数字证书，一个经证书授权中心数字签名的包含公开密钥拥有者信息以及公开密钥的文件，以数字证书为核心的加密技术(加密传输、数字签名、数字信封等安全技术)可以对网络上传输的信息进行加密和解密、数字签名和签名验证，确保网上传递信息的机密性、完整性及交易的不可抵赖性。</p>
+<p>数字签名，是非对称密钥加密技术与数字摘要技术的应用，用于鉴别数字信息的完整性，同时具有不可否认性。</p>
+<p>OCSP：在线证书状态协议，用于获得X.509 证书的吊销状态。一个OCSP 响应器可以返回响应表示请求中指定的证书状态是’好’，’撤销’，或’未知’的。</p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/08/27/安恒杯八月赛应急响应流量包分析writeup/" title= "安恒杯八月赛应急响应流量包分析writeup">
+                    <div class="nextTitle">安恒杯八月赛应急响应流量包分析writeup</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/07/24/安恒杯7月赛writeup/" title= "安恒杯7月赛writeup">
+                    <div class="prevTitle">安恒杯7月赛writeup</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:xpf1996cc@126.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/thr0cyte" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="//steamcommunity.com/profiles/76561198419876010/" class="iconfont-archer steam" target="_blank" title=steam></a>
+            
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        
+    </div>
+
+    
+    <div class="busuanzi-container">
+    
+     
+    
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 12
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/20</span><a class="archive-post-title" href= "/2018/09/20/画了个信息收集的脑图/" >画了个信息收集的脑图</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/安恒杯八月赛应急响应流量包分析writeup/" >安恒杯八月赛应急响应流量包分析writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2018/08/01/security-考后心得/" >security+考后心得</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2018/07/24/安恒杯7月赛writeup/" >安恒杯7月赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href= "/2018/07/02/如何黑掉同局域网的手机/" >如何黑掉同局域网的手机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2018/06/26/安恒杯6月赛web题writeup/" >安恒杯6月赛web题writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2018/06/20/记被通信网络设计整惨的两天/" >记被通信网络设计整惨的两天</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/09</span><a class="archive-post-title" href= "/2018/06/09/社工库检索器-py/" >社工库检索器.py</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span><a class="archive-post-title" href= "/2018/06/04/铁人三项企业攻防赛writeup/" >铁人三项企业攻防赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/盗取wpa2密码的一个骚思路/" >盗取wpa2密码的一个骚思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/ddos攻击及检测/" >ddos攻击及检测</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/iscc2018最后一道misc-writeup/" >iscc2018最后一道misc writeup</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="ddos"><span class="iconfont-archer">&#xe606;</span>ddos</span>
+    
+        <span class="sidebar-tag-name" data-tags="抓包"><span class="iconfont-archer">&#xe606;</span>抓包</span>
+    
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf"><span class="iconfont-archer">&#xe606;</span>ctf</span>
+    
+        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="iscc"><span class="iconfont-archer">&#xe606;</span>iscc</span>
+    
+        <span class="sidebar-tag-name" data-tags="security+"><span class="iconfont-archer">&#xe606;</span>security+</span>
+    
+        <span class="sidebar-tag-name" data-tags="安恒杯"><span class="iconfont-archer">&#xe606;</span>安恒杯</span>
+    
+        <span class="sidebar-tag-name" data-tags="中间人"><span class="iconfont-archer">&#xe606;</span>中间人</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns投毒"><span class="iconfont-archer">&#xe606;</span>dns投毒</span>
+    
+        <span class="sidebar-tag-name" data-tags="arp欺骗"><span class="iconfont-archer">&#xe606;</span>arp欺骗</span>
+    
+        <span class="sidebar-tag-name" data-tags="反弹shell"><span class="iconfont-archer">&#xe606;</span>反弹shell</span>
+    
+        <span class="sidebar-tag-name" data-tags="安卓"><span class="iconfont-archer">&#xe606;</span>安卓</span>
+    
+        <span class="sidebar-tag-name" data-tags="应急响应"><span class="iconfont-archer">&#xe606;</span>应急响应</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息收集"><span class="iconfont-archer">&#xe606;</span>信息收集</span>
+    
+        <span class="sidebar-tag-name" data-tags="脑图"><span class="iconfont-archer">&#xe606;</span>脑图</span>
+    
+        <span class="sidebar-tag-name" data-tags="wifi"><span class="iconfont-archer">&#xe606;</span>wifi</span>
+    
+        <span class="sidebar-tag-name" data-tags="wpa2"><span class="iconfont-archer">&#xe606;</span>wpa2</span>
+    
+        <span class="sidebar-tag-name" data-tags="无线渗透"><span class="iconfont-archer">&#xe606;</span>无线渗透</span>
+    
+        <span class="sidebar-tag-name" data-tags="社工"><span class="iconfont-archer">&#xe606;</span>社工</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="社工库"><span class="iconfont-archer">&#xe606;</span>社工库</span>
+    
+        <span class="sidebar-tag-name" data-tags="网络"><span class="iconfont-archer">&#xe606;</span>网络</span>
+    
+        <span class="sidebar-tag-name" data-tags="acl"><span class="iconfont-archer">&#xe606;</span>acl</span>
+    
+        <span class="sidebar-tag-name" data-tags="nat"><span class="iconfont-archer">&#xe606;</span>nat</span>
+    
+        <span class="sidebar-tag-name" data-tags="ospf"><span class="iconfont-archer">&#xe606;</span>ospf</span>
+    
+        <span class="sidebar-tag-name" data-tags="铁人三项"><span class="iconfont-archer">&#xe606;</span>铁人三项</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
