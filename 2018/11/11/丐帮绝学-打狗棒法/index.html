@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">52</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">256</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -403,15 +403,20 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>憋了很久的“打狗棒法”，一直在搜集资料，今天就实验一下，还有更好的方法的话求大佬教一手</p>
-<p>实验环境：win2003、360waf、攻击机、webug漏洞靶场</p>
-
+        <p>憋了很久的“打狗棒法”，一直在”闭关“搜集资料，今天出关了，写个总结。还有别的绕过骚思路求大佬教一手</p>
+<h1 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h1><p>本想用phpstudy搭的，结果360waf、safedog都不兼容，最后只好用win2008里的iis了。下了个php-cgi和mysql，把iis和它们连起来就搭好了服务端环境。<br>然后就是一个找“狗”的过程，看了云啊盾啊一些产品，最后选择了开源的modesecurity。安装教程在这:<a href="https://hk.saowen.com/a/631632e30a65817b26dafd5768eca076d225c913311ff3f4e9d9e43d4b4b4112" target="_blank" rel="noopener">https://hk.saowen.com/a/631632e30a65817b26dafd5768eca076d225c913311ff3f4e9d9e43d4b4b4112</a><br>然后把前面php代码审计课程里的一些代码贴进去用做漏洞环境。<br>准备妥当，开始“打狗”。</p>
+<h1 id="打狗棒法第一式–挑拨狗爪"><a href="#打狗棒法第一式–挑拨狗爪" class="headerlink" title="打狗棒法第一式–挑拨狗爪"></a>打狗棒法第一式–挑拨狗爪</h1><h1 id="打狗棒法第二式–犬牙交错"><a href="#打狗棒法第二式–犬牙交错" class="headerlink" title="打狗棒法第二式–犬牙交错"></a>打狗棒法第二式–犬牙交错</h1><h1 id="打狗棒法第三式–丧家之犬"><a href="#打狗棒法第三式–丧家之犬" class="headerlink" title="打狗棒法第三式–丧家之犬"></a>打狗棒法第三式–丧家之犬</h1><h1 id="打狗棒法第四式–鸡飞狗跳"><a href="#打狗棒法第四式–鸡飞狗跳" class="headerlink" title="打狗棒法第四式–鸡飞狗跳"></a>打狗棒法第四式–鸡飞狗跳</h1><h1 id="打狗棒法第五式–摇头摆尾"><a href="#打狗棒法第五式–摇头摆尾" class="headerlink" title="打狗棒法第五式–摇头摆尾"></a>打狗棒法第五式–摇头摆尾</h1><h1 id="打狗棒法第六式–蜀犬吠日"><a href="#打狗棒法第六式–蜀犬吠日" class="headerlink" title="打狗棒法第六式–蜀犬吠日"></a>打狗棒法第六式–蜀犬吠日</h1><h1 id="打狗棒法第六式–斗犬十弄"><a href="#打狗棒法第六式–斗犬十弄" class="headerlink" title="打狗棒法第六式–斗犬十弄"></a>打狗棒法第六式–斗犬十弄</h1><h1 id="打狗棒法第六式–天下无狗"><a href="#打狗棒法第六式–天下无狗" class="headerlink" title="打狗棒法第六式–天下无狗"></a>打狗棒法第六式–天下无狗</h1>
     </article>
     <!-- license  -->
     
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/11/12/文件上传绕过总结/" title= "文件上传绕过总结">
+                    <div class="nextTitle">文件上传绕过总结</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -556,7 +561,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#搭建环境"><span class="toc-number">1.</span> <span class="toc-text">搭建环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第一式–挑拨狗爪"><span class="toc-number">2.</span> <span class="toc-text">打狗棒法第一式–挑拨狗爪</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第二式–犬牙交错"><span class="toc-number">3.</span> <span class="toc-text">打狗棒法第二式–犬牙交错</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第三式–丧家之犬"><span class="toc-number">4.</span> <span class="toc-text">打狗棒法第三式–丧家之犬</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第四式–鸡飞狗跳"><span class="toc-number">5.</span> <span class="toc-text">打狗棒法第四式–鸡飞狗跳</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第五式–摇头摆尾"><span class="toc-number">6.</span> <span class="toc-text">打狗棒法第五式–摇头摆尾</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第六式–蜀犬吠日"><span class="toc-number">7.</span> <span class="toc-text">打狗棒法第六式–蜀犬吠日</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第六式–斗犬十弄"><span class="toc-number">8.</span> <span class="toc-text">打狗棒法第六式–斗犬十弄</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打狗棒法第六式–天下无狗"><span class="toc-number">9.</span> <span class="toc-text">打狗棒法第六式–天下无狗</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -734,22 +739,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -762,6 +754,11 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2018/11/12/文件上传绕过总结/" >文件上传绕过总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -852,11 +849,21 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="wifi"><span class="iconfont-archer">&#xe606;</span>wifi</span>
     
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
         <span class="sidebar-tag-name" data-tags="ctf"><span class="iconfont-archer">&#xe606;</span>ctf</span>
+    
+        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="iscc"><span class="iconfont-archer">&#xe606;</span>iscc</span>
+    
+        <span class="sidebar-tag-name" data-tags="waf"><span class="iconfont-archer">&#xe606;</span>waf</span>
     
         <span class="sidebar-tag-name" data-tags="安恒杯"><span class="iconfont-archer">&#xe606;</span>安恒杯</span>
     
-        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
+        <span class="sidebar-tag-name" data-tags="文件上传"><span class="iconfont-archer">&#xe606;</span>文件上传</span>
+    
+        <span class="sidebar-tag-name" data-tags="拿shell"><span class="iconfont-archer">&#xe606;</span>拿shell</span>
     
         <span class="sidebar-tag-name" data-tags="中间人"><span class="iconfont-archer">&#xe606;</span>中间人</span>
     
@@ -872,15 +879,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="脑图"><span class="iconfont-archer">&#xe606;</span>脑图</span>
     
-        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
-    
-        <span class="sidebar-tag-name" data-tags="iscc"><span class="iconfont-archer">&#xe606;</span>iscc</span>
+        <span class="sidebar-tag-name" data-tags="应急响应"><span class="iconfont-archer">&#xe606;</span>应急响应</span>
     
         <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
     
         <span class="sidebar-tag-name" data-tags="社工库"><span class="iconfont-archer">&#xe606;</span>社工库</span>
-    
-        <span class="sidebar-tag-name" data-tags="应急响应"><span class="iconfont-archer">&#xe606;</span>应急响应</span>
     
         <span class="sidebar-tag-name" data-tags="wpa2"><span class="iconfont-archer">&#xe606;</span>wpa2</span>
     
@@ -895,8 +898,6 @@ top:50vh;
         <span class="sidebar-tag-name" data-tags="ospf"><span class="iconfont-archer">&#xe606;</span>ospf</span>
     
         <span class="sidebar-tag-name" data-tags="铁人三项"><span class="iconfont-archer">&#xe606;</span>铁人三项</span>
-    
-        <span class="sidebar-tag-name" data-tags="waf"><span class="iconfont-archer">&#xe606;</span>waf</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -935,13 +936,13 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
     
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
         <span class="sidebar-category-name" data-categories="内网渗透"><span class="iconfont-archer">&#xe60a;</span>内网渗透</span>
     
         <span class="sidebar-category-name" data-categories="脑图"><span class="iconfont-archer">&#xe60a;</span>脑图</span>
     
         <span class="sidebar-category-name" data-categories="编程"><span class="iconfont-archer">&#xe60a;</span>编程</span>
-    
-        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
